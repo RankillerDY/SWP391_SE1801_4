@@ -18,7 +18,7 @@ import lombok.*;
         @Column(name ="ID")
         private int ID;
 
-        @Column(name ="Name")
+        @Column(name ="name")
         private String name;
 
         @Column(name = "price")
@@ -27,13 +27,13 @@ import lombok.*;
         @Column(name = "Sold")
         private int Sold;
 
-        @Column(name = "Image")
+        @Column(name = "image")
         private String image;
 
-        @Column(name = "Describe")
+        @Column(name = "Describes")
         private String Describes;
 
-        @Column(name = "Status")
+        @Column(name = "status")
         private boolean status;
     }
 

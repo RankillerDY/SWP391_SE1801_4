@@ -175,6 +175,37 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+    @Override
+    public ResponseEntity<ResponseObject> filterByStatus(boolean status) {
+        try {
+            // Fetch all products with the given status
+            List<Product> products = productRepository.findByStatus(status);
+
+            // Check if any products were found
+            if (products.isEmpty()) {
+                ResponseObject errorResponse = new ResponseObject();
+                errorResponse.setStatus("error");
+                errorResponse.setMessage("No products found with the given status");
+                errorResponse.setData(null);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+            }
+
+            // Create the response object
+            ResponseObject responseObject = new ResponseObject();
+            responseObject.setStatus("success");
+            responseObject.setMessage("Products fetched successfully");
+            responseObject.setData(products);
+
+            return ResponseEntity.status(HttpStatus.OK).body(responseObject);
+        } catch (Exception e) {
+            ResponseObject errorResponse = new ResponseObject();
+            errorResponse.setStatus("error");
+            errorResponse.setMessage("Internal server error");
+            errorResponse.setData(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
     private String validateProductDto(ProductDto productDto) {
         if (productDto == null) {
             return "Product data is required";

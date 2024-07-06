@@ -49,6 +49,11 @@ public class ProductController {
         return productService.getAll();
     }
 
+    @GetMapping("/filter")
+    ResponseEntity<ResponseObject> getProductsFiltered(@RequestParam(value = "status") Boolean status) {
+        return productService.filterByStatus(status);
+    }
+
     @PostMapping("/create")
     ResponseEntity<ResponseObject> createProduct(@RequestBody ProductDto productObj) {
         return productService.createProduct(productObj);

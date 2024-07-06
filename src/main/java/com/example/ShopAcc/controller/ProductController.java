@@ -44,6 +44,11 @@ public class ProductController {
         return "product";
     }
 
+    @GetMapping("/")
+    ResponseEntity<ResponseObject> getProducts() {
+        return productService.getAll();
+    }
+
     @PostMapping("/create")
     ResponseEntity<ResponseObject> createProduct(@RequestBody ProductDto productObj) {
         return productService.createProduct(productObj);
@@ -52,5 +57,10 @@ public class ProductController {
     @PutMapping("/edit/{id}")
     ResponseEntity<ResponseObject> editProduct(@RequestBody ProductDto productObj, @PathVariable(name = "id") Integer id) {
         return productService.editProduct(id, productObj);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    ResponseEntity<ResponseObject> createProduct(@PathVariable(name = "id") Integer id) {
+        return productService.softDelete(id);
     }
 }

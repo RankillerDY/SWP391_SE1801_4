@@ -23,8 +23,8 @@ public class ProductServiceImpl implements ProductService {
     ProductRepository productRepository;
 
     @Override
-    public List<Product> getAll() {
-        return productRepository.findAll();
+    public ResponseEntity<ResponseObject> getAll() {
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Successfully", "Get all products", productRepository.findAll()));
     }
 
     @Override
@@ -126,6 +126,43 @@ public class ProductServiceImpl implements ProductService {
             ResponseObject responseObject = new ResponseObject();
             responseObject.setStatus("success");
             responseObject.setMessage("Product updated successfully");
+            responseObject.setData(updatedProduct);
+
+            return ResponseEntity.status(HttpStatus.OK).body(responseObject);
+        } catch (Exception e) {
+            ResponseObject errorResponse = new ResponseObject();
+            errorResponse.setStatus("error");
+            errorResponse.setMessage("Internal server error");
+            errorResponse.setData(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    @Override
+    public ResponseEntity<ResponseObject> softDelete(int id) {
+        try {
+            // Find the existing product by ID
+            Optional<Product> existingProductOpt = productRepository.findById(id);
+            if (!existingProductOpt.isPresent()) {
+                ResponseObject errorResponse = new ResponseObject();
+                errorResponse.setStatus("error");
+                errorResponse.setMessage("Product not found");
+                errorResponse.setData(null);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+            }
+
+            Product existingProduct = existingProductOpt.get();
+
+            // Toggle the product status
+            existingProduct.setStatus(!existingProduct.isStatus());
+
+            // Save the updated product to the repository
+            Product updatedProduct = productRepository.save(existingProduct);
+
+            // Create the response object
+            ResponseObject responseObject = new ResponseObject();
+            responseObject.setStatus("success");
+            responseObject.setMessage("Product status updated successfully");
             responseObject.setData(updatedProduct);
 
             return ResponseEntity.status(HttpStatus.OK).body(responseObject);
